@@ -1,5 +1,47 @@
 import React, { useState } from 'react'
 
+const Filter = (props) => {
+  return (
+    <div>
+      filter shown with <input
+      onChange={props.handler}
+      />
+    </div>
+  )
+}
+
+const Form = (props) => {
+  const addItem = props.additem
+  return (
+    <form onSubmit={addItem}>
+      <div>
+        name: <input
+        value = {props.newName}
+        onChange={props.nameChange}
+      />
+      </div>
+      <div>
+        number: <input
+        value={props.newNumber}
+        onChange={props.numberChange}
+      />
+      </div>
+      <div>
+        <button type="submit"
+        >add</button>
+      </div>
+    </form>
+  )
+}
+
+const Numbers = (props) => {
+  return (
+    <div>{props.persons.filter(function (person) {return person.name.toLowerCase().includes(props.newFilter.toLowerCase())}).map(person =>
+      <p key={person.name}>{person.name} {person.number}</p>)}
+    </div>
+  )
+}
+
 const App = () => {
   const [ persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
@@ -41,33 +83,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input
-        onChange={handleFilterChange}
-        />
-      </div>
+      <Filter handler={handleFilterChange}/>
       <h2>add a new</h2>
-      <form onSubmit={addItem}>
-        <div>
-          name: <input
-          onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          number: <input
-          value={newNumber}
-          onChange={handleNumberChange}
-          type="tel"
-          />
-        </div>
-        <div>
-          <button type="submit"
-          >add</button>
-        </div>
-      </form>
+      <Form additem={addItem} nameChange={handleNameChange} newName={newName} newNumber={newNumber} numberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      {persons.filter(function (person) {return person.name.toLowerCase().includes(newFilter.toLowerCase())}).map(person =>
-        <p key={person.name}>{person.name} {person.number}</p>)}
+      <Numbers persons={persons} newFilter={newFilter}/>
     </div>
   )
 
