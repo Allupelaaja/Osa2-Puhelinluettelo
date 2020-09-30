@@ -38,7 +38,7 @@ const Form = (props) => {
 const Numbers = (props) => {
   return (
     <div>{props.persons.filter(function (person) {return person.name.toLowerCase().includes(props.newFilter.toLowerCase())}).map(person =>
-      <p key={person.name}>{person.name} {person.number}</p>)}
+      <p key={person.name}>{person.name} {person.number} <button onClick={function (e) {props.removeItem(e, person)}}>delete</button></p>)}
     </div>
   )
 }
@@ -60,6 +60,23 @@ const App = () => {
   }, [])
   console.log('render', persons.length, 'persons')
 
+  const removeItem = (event, person) => {
+    event.preventDefault()
+    if (window.confirm('Delete '+person.name+' ?')) {
+      console.log('effect')
+      console.log(person.id)
+      personService
+        .deleteItem(person.id)
+        .then(response => {
+          console.log('item deleted')
+          console.log(response.data)
+          const newPersons = [...persons]
+          newPersons.splice(newPersons.indexOf(person), 1)
+          setPersons(newPersons)
+        })
+    }
+  }
+
   const addItem = (event) => {
     event.preventDefault()
     if (persons.some(item => item.name === newName)) {
@@ -73,10 +90,13 @@ const App = () => {
       personService
         .create(nameObject)
         .then(response => {
-          setPersons(persons.concat(nameObject))
+          personService
+          .getAll()
+          .then(response => {
+            setPersons(response.data)
+          })
           setNewName('')
           setNewNumber('')
-          console.log(response)
       })
     }
   }
@@ -100,7 +120,7 @@ const App = () => {
       <h2>add a new</h2>
       <Form additem={addItem} nameChange={handleNameChange} newName={newName} newNumber={newNumber} numberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      <Numbers persons={persons} newFilter={newFilter}/>
+      <Numbers persons={persons} newFilter={newFilter} removeItem={removeItem}/>
     </div>
   )
 
