@@ -80,7 +80,20 @@ const App = () => {
   const addItem = (event) => {
     event.preventDefault()
     if (persons.some(item => item.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+      //alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const person = persons.find(person => person.name === newName)
+        person.number = newNumber
+        personService
+        .update(person.id, person)
+        .then(response=> {
+          personService
+          .getAll()
+          .then(response => {
+            setPersons(response.data)
+          })
+        })
+      }
     } else {
       const nameObject = {
         name: newName,
@@ -95,10 +108,10 @@ const App = () => {
           .then(response => {
             setPersons(response.data)
           })
-          setNewName('')
-          setNewNumber('')
       })
     }
+    setNewName('')
+    setNewNumber('')
   }
 
   const handleFilterChange = (event) => {
