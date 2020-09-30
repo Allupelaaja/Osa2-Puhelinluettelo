@@ -24,21 +24,6 @@
       "name": "abc def",
       "number": "111 111",
       "id": 5
-    },
-    {
-      "name": "asd fgh",
-      "number": "67889",
-      "id": 6
-    },
-    {
-      "name": "testi testinen",
-      "number": "123",
-      "id": 7
-    },
-    {
-      "name": "asd",
-      "number": "156",
-      "id": 8
     }
   ]
 }
