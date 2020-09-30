@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import personService from './services/persons'
+import './App.css'
 
 const Filter = (props) => {
   return (
@@ -43,11 +44,24 @@ const Numbers = (props) => {
   )
 }
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="notification">
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   useEffect(() => {
     console.log('effect')
@@ -73,6 +87,11 @@ const App = () => {
           const newPersons = [...persons]
           newPersons.splice(newPersons.indexOf(person), 1)
           setPersons(newPersons)
+          //notification
+          setNotificationMessage('Removed '+person.name)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
         })
     }
   }
@@ -91,6 +110,11 @@ const App = () => {
           .getAll()
           .then(response => {
             setPersons(response.data)
+            //notification
+            setNotificationMessage('Updated '+person.name)
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
           })
         })
       }
@@ -107,6 +131,11 @@ const App = () => {
           .getAll()
           .then(response => {
             setPersons(response.data)
+            //notification
+            setNotificationMessage('Added '+nameObject.name)
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
           })
       })
     }
@@ -129,6 +158,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter handler={handleFilterChange}/>
       <h2>add a new</h2>
       <Form additem={addItem} nameChange={handleNameChange} newName={newName} newNumber={newNumber} numberChange={handleNumberChange}/>
