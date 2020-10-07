@@ -1,25 +1,19 @@
-import axios from 'axios'
-const baseUrl = '/api/persons'
+/* eslint-disable linebreak-style */
+import axios from 'axios';
 
-const getAll = () => {
-    return axios.get(baseUrl)
-}
+const baseUrl = '/api/persons';
 
-const create = newObject => {
-    return axios.post(baseUrl, newObject)
-}
+const getAll = () => axios.get(baseUrl);
 
-const update = (id, newObject) => {
-    return axios.put(`${baseUrl}/${id}`, newObject)
-}
+const create = (newObject) => axios.post(baseUrl, newObject);
 
-const deleteItem = (id) => {
-    return axios.delete(`${baseUrl}/${id}`)
-}
+const update = (id, newObject) => axios.put(`${baseUrl}/${id}`, newObject);
 
-export default { 
-    getAll: getAll, 
-    create: create, 
-    update: update, 
-    deleteItem: deleteItem
-}
+const deleteItem = (id) => axios.delete(`${baseUrl}/${id}`);
+
+export default {
+  getAll,
+  create,
+  update,
+  deleteItem,
+};
