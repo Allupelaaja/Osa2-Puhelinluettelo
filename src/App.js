@@ -112,23 +112,19 @@ const App = () => {
   const addItem = (event) => {
     event.preventDefault()
     if (persons.some(item => item.name === newName)) {
-      //alert(`${newName} is already added to phonebook`)
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const person = persons.find(person => person.name === newName)
-        person.number = newNumber
+        const personCopy = {...person}
+        personCopy.number = newNumber
         personService
-        .update(person.id, person)
+        .update(person.id, personCopy)
         .then(response=> {
-          personService
-          .getAll()
-          .then(response => {
-            setPersons(response.data)
-            //notification
-            setNotificationMessage('Updated '+person.name)
-            setTimeout(() => {
-              setNotificationMessage(null)
-            }, 5000)
-          })
+          person.number = newNumber
+          //notification
+          setNotificationMessage('Updated '+person.name)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
         })
         .catch(error => {
           setErrorMessage('Information of '+person.name+' has already been removed from server')
@@ -146,16 +142,14 @@ const App = () => {
       personService
         .create(nameObject)
         .then(response => {
-          personService
-          .getAll()
-          .then(response => {
-            setPersons(response.data)
-            //notification
-            setNotificationMessage('Added '+nameObject.name)
-            setTimeout(() => {
-              setNotificationMessage(null)
-            }, 5000)
-          })
+          const personsCopy = [...persons]
+          personsCopy.push(response.data)
+          setPersons(personsCopy)
+          //notification
+          setNotificationMessage('Added '+nameObject.name)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
       })
     }
     setNewName('')
